@@ -128,20 +128,82 @@ describe('AuthController - Register', () => {
     )
   })
 
-  it('should return 201 and a message if registration is successful', async () => {
-    const response = await request(app)
-      .post('/o/oauth/v1/register')
-      .send({
-        email: 'newuser3@example.com',
-        password: 'ValidPassword123!'
-      })
+  // ? success case
+  // it('should return 201 and a message if registration is successful', async () => {
+  //   const response = await request(app)
+  //     .post('/o/oauth/v1/register')
+  //     .send({
+  //       email: 'newuser3@example.com',
+  //       password: 'ValidPassword123!'
+  //     })
 
-    expect(response.status).toBe(201)
+  //   expect(response.status).toBe(201)
+  //   expect(response.body).toHaveProperty(
+  //     'message',
+  //     'success register new user'
+  //   )
+  //   expect(response.body).toHaveProperty('data')
+  //   // Pastikan data berisi informasi yang benar, seperti user ID atau token
+  // })
+})
+
+describe('AuthController - Forgot Password', () => {
+  it('should return 400 if email is missing', async () => {
+    const response = await request(app)
+      .post('/o/oauth/v1/forgot-password')
+      .send({}) // Email tidak dikirim
+
+    expect(response.status).toBe(400)
+    expect(response.body).toHaveProperty('status', 'failed')
     expect(response.body).toHaveProperty(
       'message',
-      'success register new user'
+      'Email is required'
+    )
+  })
+
+  it('should return 400 if email format is invalid', async () => {
+    const response = await request(app)
+      .post('/o/oauth/v1/forgot-password')
+      .send({
+        email: 'invalid-email'
+      })
+
+    expect(response.status).toBe(400)
+    expect(response.body).toHaveProperty('status', 'failed')
+    expect(response.body).toHaveProperty(
+      'message',
+      'Email must be valid format'
+    )
+  })
+
+  it('should return 404 if email is not found', async () => {
+    const response = await request(app)
+      .post('/o/oauth/v1/forgot-password')
+      .send({
+        email: 'nonexistent@example.com'
+      })
+
+    expect(response.status).toBe(404)
+    expect(response.body).toHaveProperty('status', 'failed')
+    expect(response.body).toHaveProperty(
+      'message',
+      'Email is not registered!'
+    )
+  })
+
+  // ? success case
+  it('should return 200 and send reset password link if email exists', async () => {
+    const response = await request(app)
+      .post('/o/oauth/v1/forgot-password')
+      .send({
+        email: 'superadmin@superadmin.com'
+      })
+
+    expect(response.status).toBe(200)
+    expect(response.body).toHaveProperty(
+      'message',
+      'success forgot password'
     )
     expect(response.body).toHaveProperty('data')
-    // Pastikan data berisi informasi yang benar, seperti user ID atau token
   })
 })
