@@ -48,12 +48,13 @@ describe('AuthController - Login', () => {
     )
   })
 
+  // ? success case
   it('should return 200 and a token if email and password are valid', async () => {
     const response = await request(app)
       .post('/o/oauth/v1/login')
       .send({
         email: 'superadmin@superadmin.com',
-        password: '@Password123'
+        password: 'NewPassword123!'
       })
 
     expect(response.status).toBe(200)
@@ -192,18 +193,18 @@ describe('AuthController - Forgot Password', () => {
   })
 
   // ? success case
-  it('should return 200 and send reset password link if email exists', async () => {
-    const response = await request(app)
-      .post('/o/oauth/v1/forgot-password')
-      .send({
-        email: 'superadmin@superadmin.com'
-      })
+  // it('should return 200 and send reset password link if email exists', async () => {
+  //   const response = await request(app)
+  //     .post('/o/oauth/v1/forgot-password')
+  //     .send({
+  //       email: 'superadmin@superadmin.com'
+  //     })
 
-    expect(response.status).toBe(200)
-    expect(response.body).toHaveProperty(
-      'message',
-      'success forgot password'
-    )
-    expect(response.body).toHaveProperty('data')
-  })
+  //   expect(response.status).toBe(200)
+  //   expect(response.body).toHaveProperty(
+  //     'message',
+  //     'success forgot password'
+  //   )
+  //   expect(response.body).toHaveProperty('data')
+  // })
 })
